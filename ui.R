@@ -2,12 +2,13 @@ library(shiny)
 #library(shinyTime)
 
 ui <- fluidPage(
-        h1("Witness Statistics"),
+        h1("Bitshares Witness Statistics"),
+        verbatimTextOutput(outputId = "last_update"),
         uiOutput("select_witness"),
-
-    verbatimTextOutput(outputId = "last_update"),
+    p(strong("Missed Blocks:")),
+    
     verbatimTextOutput(outputId = "missed_block_summary"),
-    verbatimTextOutput(outputId = "check_select_witness"),
+    #verbatimTextOutput(outputId = "check_select_witness"),
     #radioButtons(inputId ="topic_of_interest", label = "Select Topic", choices = c("User Activity", "Network Activity"), selected = "Network Activity"),
     
     #dateInput(inputId = "date" , label = "choose a date",value = "2017-3-27"),

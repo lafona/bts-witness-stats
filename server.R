@@ -85,7 +85,7 @@ server <- function(input, output) {
         missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(6*3600))) -> six_hours_old_missed_count
         missed_in_six<-max(missed_block_history$total_missed)-min(six_hours_old_missed_count$total_missed)
         
-        missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(6*3600))) -> week_old_missed_count
+        missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(7*24*3600))) -> week_old_missed_count
         missed_in_week<-max(missed_block_history$total_missed)-min(week_old_missed_count$total_missed)
         
         #missed_block_data<-c(missed_in_twentyfour,missed_in_six)
