@@ -80,7 +80,7 @@ server <- function(input, output) {
     
     output$last_update<-renderText({paste("Contains data from",min(feed_data()$last_block_time),"to",max(feed_data()$last_block_time))})
     output$check_select_witness<-renderText({input$select_witness})
-    output$missed_block_summary<-renderText({paste("last six hours: ",as.character(missed_block_data()[1]),"  last 24 hours: ",as.character(missed_block_data()[2]),"   last week: ",as.character(missed_block_data()[3]))
+    output$missed_block_summary<-renderText({paste("last six hours: ",as.character(missed_block_data()[1]),"  last 24 hours: ",as.character(missed_block_data()[2]))#,"   last week: ",as.character(missed_block_data()[3]))
         })
     
     
