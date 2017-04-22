@@ -31,7 +31,7 @@ with open('./data/witness_list/witness_list.txt') as data_file:
     witness_list = json.load(data_file)
 print(witness_list)
 while True:
-    if datetime.datetime.now().minute % 1 ==0:
+    if datetime.datetime.now().minute % 5 ==0:
 
 #        block = rpc.
         #pprint(chain.get_current_block())
