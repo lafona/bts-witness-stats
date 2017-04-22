@@ -40,7 +40,7 @@ server <- function(input, output) {
                     max = max(feed_data()$last_block_time),
                     value = c((max(feed_data()$last_block_time))-7200,max(feed_data()$last_block_time)),
                     timezone = "+0000",
-                    timeFormat = "%b %e %H:%M", ticks = T, animate = F,width = '100%',step = 300
+                    timeFormat = "%b %e %H:%M", ticks = T, animate = F,width = '90%',step = 300
         )
     })
     
