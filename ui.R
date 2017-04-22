@@ -2,7 +2,7 @@ library(shiny)
 #library(shinyTime)
 
 ui <- fluidPage(
-    h1("Bitshares Witness Statistics"),
+    h1("Bitshares Witness Performance"),
     verbatimTextOutput(outputId = "last_update"),
     uiOutput("select_witness"),
     p(strong("Missed Blocks:")),
