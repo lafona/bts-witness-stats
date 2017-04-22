@@ -63,24 +63,28 @@ server <- function(input, output) {
         active_witnesses() %>% dplyr::filter(name %in% input$select_witness)->chosen_witness_info
         missed_blocks() %>% dplyr::filter(witness_id %in% chosen_witness_info$witness_id) -> missed_block_history
         
-        #calculate missed blocks for 24 hours
-        missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(24*3600))) -> twentyfour_hours_old_missed_count
-        missed_in_twentyfour<-max(missed_block_history$total_missed)-min(twentyfour_hours_old_missed_count$total_missed)
+        #1 hour
+        missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(1*3600))) -> one_hour_old_missed_count
+        missed_in_one<-max(missed_block_history$total_missed)-min(one_hour_old_missed_count$total_missed)
         
         #6 hours
         missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(6*3600))) -> six_hours_old_missed_count
         missed_in_six<-max(missed_block_history$total_missed)-min(six_hours_old_missed_count$total_missed)
         
+        #calculate missed blocks for 24 hours
+        missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(24*3600))) -> twentyfour_hours_old_missed_count
+        missed_in_twentyfour<-max(missed_block_history$total_missed)-min(twentyfour_hours_old_missed_count$total_missed)
+        
         #1 week
         missed_block_history %>% dplyr::filter(timestamp >= (max(missed_block_history$timestamp)-(7*24*3600))) -> week_old_missed_count
         missed_in_week<-max(missed_block_history$total_missed)-min(week_old_missed_count$total_missed)
         
-        missed_block_data<-c(missed_in_six, missed_in_twentyfour, missed_in_week)
+        missed_block_data<-c(missed_in_one,missed_in_six, missed_in_twentyfour, missed_in_week)
     })
     
     output$last_update<-renderText({paste("Contains data from",min(feed_data()$last_block_time),"to",max(feed_data()$last_block_time))})
     output$check_select_witness<-renderText({input$select_witness})
-    output$missed_block_summary<-renderText({paste("last six hours: ",as.character(missed_block_data()[1]),"  last 24 hours: ",as.character(missed_block_data()[2]))#,"   last week: ",as.character(missed_block_data()[3]))
+    output$missed_block_summary<-renderText({paste("last hour:",as.character(missed_block_data()[1]),"   last 6 hours:",as.character(missed_block_data()[2]),"    last 24 hours:",as.character(missed_block_data()[3]))
         })
     
     
