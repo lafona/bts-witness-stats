@@ -3,7 +3,7 @@ library(data.table)
 library(dplyr)
 library(dtplyr)
 
-
+getwd()
 # feed_history<- fromJSON("./feed_history.txt")
 # feed_history<- data.table(feed_history)
 # colnames(feed_history)<-c("last_block_time","account_id","feedtime","base_usd","quote_bts")
