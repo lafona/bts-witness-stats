@@ -5,6 +5,7 @@ library(scales)
 library(feather)
 library(dtplyr)
 library(dplyr)
+library(DT)
 
 
 server <- function(input, output) {
@@ -44,7 +45,30 @@ server <- function(input, output) {
         )
     })
     
-    
+    table_data<- reactive({
+        active_witnesses()
+        current_time<-max(missed_blocks()$timestamp)
+        #missed_blocks() %>% filter(witness_id %in% active_witnesses()$account_id)
+        missed_blocks() %>% group_by(witness_id) %>% summarise(missed = max(total_missed)) ->total_missed
+        missed_blocks() %>% group_by(witness_id) %>% filter(timestamp<(current_time-3600))%>%summarise(missed60 = max(total_missed)) ->hourly_missed
+        missed_blocks() %>% group_by(witness_id) %>% filter(timestamp<(current_time-3600*24))%>%summarise(missed24 = max(total_missed)) ->daily_missed
+        missed_blocks() %>% group_by(witness_id) %>% filter(timestamp<(current_time-3600*24*7))%>%summarise(missed7 = max(total_missed)) ->weekly_missed
+        missed_by_time <-left_join(total_missed, hourly_missed)
+        missed_by_time <-left_join(missed_by_time, daily_missed)
+        missed_by_time <-left_join(missed_by_time, weekly_missed)
+        filtered_missed<-left_join(active_witnesses(),missed_by_time)
+        filtered_missed$witness_id<-NULL
+        filtered_missed$account_id<-NULL
+        filtered_missed$'missed in last hour'<-filtered_missed$missed-filtered_missed$missed60
+        filtered_missed$'missed in last 24 hours '<-filtered_missed$missed-filtered_missed$missed24
+        #filtered_missed$'missed in last week'<-filtered_missed$missed-filtered_missed$missed7
+        filtered_missed$missed<-NULL
+        filtered_missed$missed60<-NULL
+        filtered_missed$missed24<-NULL
+        filtered_missed$missed7<-NULL
+        filtered_missed
+    })
+    output$witness_summary<-DT::renderDataTable(table_data(),server = FALSE)
     output$select_witness<- renderUI({
         selectInput(inputId = "select_witness",
                            label = "Select witness:",
@@ -97,8 +121,10 @@ server <- function(input, output) {
         
         ggplot(data = filtered_data(), aes(x = last_block_time, y = ratio, colour = name))+
             geom_line()+
-            geom_line(data = filtered_data() %>% dplyr::filter(name %in% input$select_witness),aes(x = last_block_time, y = ratio),size = 2) +
+            #geom_line(data = filtered_data() %>% dplyr::filter(name %in% input$select_witness),aes(x = last_block_time, y = ratio),size = 2) +
+            geom_line(data = filtered_data() %>% dplyr::filter(name %in% table_data()[input$witness_summary_rows_selected,]$name),aes(x = last_block_time, y = ratio),size = 2) +
             labs(title="Price Feeds for USD",x = "time")
     })
     output$info<- renderPrint(nearPoints(as.data.frame(filtered_data()), input$plot_select)$name)
+    #output$info<- renderPrint(nearPoints(as.data.frame(filtered_data()), input$plot_select)$name)
 }
