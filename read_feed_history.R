@@ -63,9 +63,20 @@ witness_list%>%dplyr::filter(witness_id %in% info)->active_witnesses
 
 mb_filenames <- list.files("./data/missed_blocks/", pattern="*.txt", full.names=TRUE)
 missed_blocks<-fromJSON(max(mb_filenames))
+
+ag_missed_blocks<-{}
+for (name in mb_filenames){
+    missed_blocks<- fromJSON(name)
+    missed_blocks<-data.table(missed_blocks)
+    colnames(missed_blocks)<-c("witness_id","account_id","total_missed","timestamp","block_num")
+    
+    #combines dataframes from individual files into one big data table
+    ag_missed_blocks<-rbind(ag_missed_blocks,missed_blocks)
+
+}
 #missed_blocks<-fromJSON(mb_filenames)
-missed_blocks<-data.table(missed_blocks)
-colnames(missed_blocks)<-c("witness_id","account_id","total_missed","timestamp","block_num")
+missed_blocks<-ag_missed_blocks
+#colnames(missed_blocks)<-c("witness_id","account_id","total_missed","timestamp","block_num")
 missed_blocks$timestamp<-gsub(pattern = "T",replacement = " ",x = missed_blocks$timestamp)
 missed_blocks$timestamp<-as.POSIXct(missed_blocks$timestamp,tz = "GMT")
 missed_blocks$total_missed<-as.numeric(missed_blocks$total_missed)
