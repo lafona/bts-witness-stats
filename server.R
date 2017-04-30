@@ -2,7 +2,6 @@ library(shiny)
 library(ggplot2)
 library(data.table)
 library(scales)
-library(feather)
 library(dtplyr)
 library(dplyr)
 library(DT)
@@ -61,7 +60,7 @@ server <- function(input, output) {
         filtered_missed$account_id<-NULL
         filtered_missed$'missed in last hour'<-filtered_missed$missed-filtered_missed$missed60
         filtered_missed$'missed in last 24 hours '<-filtered_missed$missed-filtered_missed$missed24
-        #filtered_missed$'missed in last week'<-filtered_missed$missed-filtered_missed$missed7
+        filtered_missed$'missed in last week'<-filtered_missed$missed-filtered_missed$missed7
         filtered_missed$missed<-NULL
         filtered_missed$missed60<-NULL
         filtered_missed$missed24<-NULL
