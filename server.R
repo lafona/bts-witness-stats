@@ -67,7 +67,9 @@ server <- function(input, output) {
         filtered_missed$missed7<-NULL
         filtered_missed
     })
-    output$witness_summary<-DT::renderDataTable(table_data(),server = FALSE)
+    output$witness_summary<-DT::renderDataTable(table_data(),options = list(
+        pageLength = 30
+    ),server = FALSE)
     output$select_witness<- renderUI({
         selectInput(inputId = "select_witness",
                            label = "Select witness:",
