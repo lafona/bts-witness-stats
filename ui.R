@@ -12,6 +12,7 @@ ui <- fluidPage(
     #verbatimTextOutput(outputId = "missed_block_summary"),
     uiOutput("reactive_slider"),
     p(strong("Feed History:")),
+    radioButtons(inputId = "asset_choice",label = "Choose asset:",choices = c("USD","CNY","BTC"),inline = TRUE),
     plotOutput(outputId = "feed_trace",click = "plot_select")
     
     #verbatimTextOutput(outputId = "info")

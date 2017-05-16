@@ -113,9 +113,12 @@ server <- function(input, output) {
         })
     
     
-    filtered_data<- reactive({
+    time_filtered_data<- reactive({
         feed_data()%>%dplyr::filter(last_block_time >= input$time_selections[1]) %>%dplyr::filter(last_block_time <= input$time_selections[2]) ->feed_data_selection
         feed_data_selection %>% dplyr::filter(name %in% active_witnesses()$name)->feed_data_selection
+    })
+    filtered_data<- reactive({
+        time_filtered_data()%>%dplyr::filter(asset %in% input$asset_choice)->filterd_data
     })
 
     output$feed_trace<-renderPlot({

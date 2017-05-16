@@ -24,6 +24,8 @@ pprint(Block(1))
 #chain_info=chain.info()
 #pprint(usd)
 #rpc =BitSharesNodeRPC("ws://localhost:8095", "", "")
+mpa_list=[["2.4.21","USD"],["2.4.13","CNY"],["2.4.3","BTC"]]
+mpa_name=["USD"]
 rpc =BitSharesNodeRPC("wss://bitshares.openledger.info/ws", "", "")
 feed_data_array = []
 missed_block_array =[]
@@ -45,34 +47,38 @@ while True:
             time.sleep(0.2)
             last_block_time = chain.get_current_block()['timestamp']
             #pprint(chain.get_current_block())
-            time.sleep(0.2)
-            feed = rpc.get_object("2.4.21")
+            for mpa in mpa_list:
+                
+                time.sleep(0.2)
+                feed = rpc.get_object(mpa[0])
 
-            #pprint(feed)
-            feeds = feed['feeds']
-            for i in feeds:
-                witness = i[0]
-                feeddata = i[1][1]
-                feedtime = i[1][0]
-                settlement = i[1][1]['settlement_price']
-                base_usd =i[1][1]['settlement_price']['base']['amount']
-                quote_bts=i[1][1]['settlement_price']['quote']['amount']
-                #print(base_usd)
-                #print(quote_bts)
-                #print(settlement)
-                pprint(chain.info())
-                feed_data_array.append([last_block_time,witness,feedtime,base_usd,quote_bts,block_num])
+                #pprint(feed)
+                feeds = feed['feeds']
+                for i in feeds:
+                    witness = i[0]
+                    feeddata = i[1][1]
+                    feedtime = i[1][0]
+                    settlement = i[1][1]['settlement_price']
+                    base_usd =i[1][1]['settlement_price']['base']['amount']
+                    quote_bts=i[1][1]['settlement_price']['quote']['amount']
+                    #print(base_usd)
+                    #print(quote_bts)
+                    #print(settlement)
+                    pprint(chain.info())
+                    feed_data_array.append([last_block_time,witness,feedtime,base_usd,quote_bts,block_num,mpa[1]])
+
+            A=open('./data/feed_history/feed_history' + str(math.floor(int(block_num)/100000))+'00000.txt','w')
+            A.write(json.dumps(feed_data_array))
+            A.close()
+            
             for wit in witness_list:
                 block_num = chain.get_current_block_num()
                 time.sleep(0.1)
                 witness_info = rpc.get_object(wit[1])
                 print(witness_info['id'],witness_info['witness_account'],witness_info['total_missed'])
                 missed_block_array.append([witness_info['id'],witness_info['witness_account'],witness_info['total_missed'],last_block_time,block_num])
-                time.sleep(0.1)                
-
-            A=open('./data/feed_history/feed_history' + str(math.floor(int(block_num)/100000))+'00000.txt','w')
-            A.write(json.dumps(feed_data_array))
-            A.close()
+                time.sleep(0.1)
+                       
             
             B=open('./data/witness_list/active_witnesses' + '.txt','w')
 #            A=open('./data/active_witnesses_' + str(math.floor(int(block_num)/100000))+'00000.txt','w')

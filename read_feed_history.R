@@ -28,9 +28,12 @@ ag_feed_history = {}
 for (name in filenames){
     feed_history<- fromJSON(name)
     feed_history<- data.table(feed_history)
-    colnames(feed_history)<-c("last_block_time","account_id","feedtime","base_usd","quote_bts","block_num")
+    colnames(feed_history)<-c("last_block_time","account_id","feedtime","base_usd","quote_bts","block_num","asset")
     
-    feed_history$ratio<-as.numeric(feed_history$base_usd)/as.numeric(feed_history$quote_bts)
+    feed_history$ratio[feed_history$asset=="USD"]<-as.numeric(feed_history$base_usd[feed_history$asset=="USD"])/as.numeric(feed_history$quote_bts[feed_history$asset=="USD"])*10
+    feed_history$ratio[feed_history$asset=="CNY"]<-as.numeric(feed_history$base_usd[feed_history$asset=="CNY"])/as.numeric(feed_history$quote_bts[feed_history$asset=="CNY"])*10
+    feed_history$ratio[feed_history$asset=="BTC"]<-as.numeric(feed_history$base_usd[feed_history$asset=="BTC"])/as.numeric(feed_history$quote_bts[feed_history$asset=="BTC"])/1000
+    
     feed_history$last_block_time<-gsub(pattern = "T",replacement = " ",x = feed_history$last_block_time)
     feed_history$last_block_time<-as.POSIXct(feed_history$last_block_time,tz = "GMT")
     feed_history$feedtime<-gsub(pattern = "T",replacement = " ",x = feed_history$feedtime)
