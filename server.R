@@ -122,12 +122,12 @@ server <- function(input, output) {
     })
 
     output$feed_trace<-renderPlot({
-        
+        plot_title=paste("Price Feeds for",input$asset_choice)
         ggplot(data = filtered_data(), aes(x = last_block_time, y = ratio, colour = name))+
             geom_line()+
             #geom_line(data = filtered_data() %>% dplyr::filter(name %in% input$select_witness),aes(x = last_block_time, y = ratio),size = 2) +
             geom_line(data = filtered_data() %>% dplyr::filter(name %in% table_data()[input$witness_summary_rows_selected,]$name),aes(x = last_block_time, y = ratio),size = 2) +
-            labs(title="Price Feeds for USD",x = "time")
+            labs(title=plot_title,x = "time")
     })
     output$info<- renderPrint(nearPoints(as.data.frame(filtered_data()), input$plot_select)$name)
     #output$info<- renderPrint(nearPoints(as.data.frame(filtered_data()), input$plot_select)$name)
