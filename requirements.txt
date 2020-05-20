@@ -29,7 +29,7 @@ friends==0.1
 funcy==1.7.2
 graphenelib==0.4.8
 html5lib==0.999
-httplib2==0.8
+httplib2==0.18.0
 jmespath==0.9.0
 kazam==1.4.5
 language-selector==0.1
