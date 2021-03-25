@@ -3,7 +3,7 @@ Cython==0.25.2
 Mako==0.9.1
 MarkupSafe==0.18
 Pillow==2.3.0
-PyYAML==3.12
+PyYAML==5.4
 Unidecode==0.04.19
 appdirs==1.4.0
 apturl==0.5.2ubuntu4
