@@ -8,7 +8,7 @@ Unidecode==0.04.19
 appdirs==1.4.0
 apturl==0.5.2ubuntu4
 asyncio==3.4.3
-autobahn==0.14.1
+autobahn==20.12.3
 awscli==1.10.63
 botocore==1.4.53
 chardet==2.2.1
