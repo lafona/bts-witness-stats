@@ -2,7 +2,7 @@ Brlapi==0.6.1
 Cython==0.25.2
 Mako==0.9.1
 MarkupSafe==0.18
-Pillow==2.3.0
+Pillow==8.2.0
 PyYAML==3.12
 Unidecode==0.04.19
 appdirs==1.4.0
